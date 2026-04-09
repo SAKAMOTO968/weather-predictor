@@ -27,7 +27,11 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     df["temp_range"] = df["temperature_max"] - df["temperature_min"]
     df["month"] = df["date"].dt.month
     
-    # shift target - เอาค่าแถวถัดไปเป็น target ของแถวนี้
+    df["temp_max_7d"] = df["temperature_max"].rolling(7, min_periods=1).mean()
+    df["precip_7d"] = df["precipitation"].rolling(7, min_periods=1).mean()
+    df["rain_days_7d"] = (df["precipitation"] > 0).rolling(7, min_periods=1).mean()
+    
+    # target
     df["next_temp_max"] = df["temperature_max"].shift(-1)
     df["will_rain"] = (df["precipitation"].shift(-1) > 0).astype(int)
     
@@ -43,6 +47,9 @@ FEATURE_COLS = [
     "windspeed_max",
     "temp_range",
     "month",
+    "temp_max_7d",
+    "precip_7d",
+    "rain_days_7d"
 ]
 
 TARGET_REGRESSION = "next_temp_max"
