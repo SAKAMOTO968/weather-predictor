@@ -27,6 +27,7 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     df["temp_range"] = df["temperature_max"] - df["temperature_min"]
     df["month"] = df["date"].dt.month
     
+    # rolling features ใหม่ - ค่าเฉลี่ย 7 วันย้อนหลัง
     df["temp_max_7d"] = df["temperature_max"].rolling(7, min_periods=1).mean()
     df["precip_7d"] = df["precipitation"].rolling(7, min_periods=1).mean()
     df["rain_days_7d"] = (df["precipitation"] > 0).rolling(7, min_periods=1).mean()
